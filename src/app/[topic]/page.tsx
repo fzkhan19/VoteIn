@@ -1,8 +1,34 @@
+import {redis} from "@/lib/redis";
 
-export default function Page({params}: {params: {topic: string}}) {
-  return (
-    <div className="grid place-items-center lg:max-w-screen-xl gap-8 mx-auto py-20 md:py-32">
-      <h1 className="text-4xl font-bold">What people think about <span className="underline decoration-orange-300 text-transparent bg-gradient-to-r from-[#D247BF] to-primary bg-clip-text whitespace-nowrap">{params.topic}</span></h1>
-    </div>
-  )
+import ClientPage from "./ClientPage";
+
+interface PageProps {
+  params: {
+    topic: string;
+  };
 }
+
+const Page = async ({params}: PageProps) => {
+  const {topic} = params;
+
+  // [redis, 3, is, 2, great, 6]
+  const initialData = await redis.zrange<(string | number)[]>(`room:${topic}`, 0, 49, {
+    withScores: true,
+  });
+
+  const words: {text: string; value: number}[] = [];
+
+  for (let i = 0; i < initialData.length; i++) {
+    const [text, value] = initialData.slice(i, i + 2);
+
+    if (typeof text === "string" && typeof value === "number") {
+      words.push({text, value});
+    }
+  }
+
+  await redis.incr("served-requests");
+
+  return <ClientPage initialData={words} topicName={topic} />;
+};
+
+export default Page;

@@ -1,12 +1,8 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import {Star} from "lucide-react";
+
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -14,7 +10,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Star } from "lucide-react";
 
 interface ReviewProps {
   image: string;
@@ -78,31 +73,26 @@ const reviewList: ReviewProps[] = [
 
 export const TestimonialSection = () => {
   return (
-    <section id="testimonials" className="container py-24 sm:py-32">
-      <div className="text-center mb-8">
-        <h2 className="text-lg text-primary text-center mb-2 tracking-wider">
-          Testimonials
-        </h2>
+    <section className="container py-24 sm:py-32" id="testimonials">
+      <div className="mb-8 text-center">
+        <h2 className="mb-2 text-center text-lg tracking-wider text-primary">Testimonials</h2>
 
-        <h2 className="text-3xl md:text-4xl text-center font-bold mb-4">
+        <h2 className="mb-4 text-center text-3xl font-bold md:text-4xl">
           Hear What Our 1000+ Clients Say
         </h2>
       </div>
 
       <Carousel
+        className="relative mx-auto w-[80%] sm:w-[90%] lg:max-w-screen-xl"
         opts={{
           align: "start",
         }}
-        className="relative w-[80%] sm:w-[90%] lg:max-w-screen-xl mx-auto"
       >
         <CarouselContent>
           {reviewList.map((review) => (
-            <CarouselItem
-              key={review.name}
-              className="md:basis-1/2 lg:basis-1/3"
-            >
+            <CarouselItem key={review.name} className="md:basis-1/2 lg:basis-1/3">
               <Card className="bg-muted/50 dark:bg-card">
-                <CardContent className="pt-6 pb-0">
+                <CardContent className="pb-0 pt-6">
                   <div className="flex gap-1 pb-6">
                     <Star className="size-4 fill-primary text-primary" />
                     <Star className="size-4 fill-primary text-primary" />
@@ -117,8 +107,8 @@ export const TestimonialSection = () => {
                   <div className="flex flex-row items-center gap-4">
                     <Avatar>
                       <AvatarImage
-                        src="https://avatars.githubusercontent.com/u/75042455?v=4"
                         alt="radix"
+                        src="https://avatars.githubusercontent.com/u/75042455?v=4"
                       />
                       <AvatarFallback>SV</AvatarFallback>
                     </Avatar>

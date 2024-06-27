@@ -1,6 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Icon } from "@/components/ui/icon";
-import { icons } from "lucide-react";
+import {icons} from "lucide-react";
+
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Icon} from "@/components/ui/icon";
 
 interface FeaturesProps {
   icon: string;
@@ -49,41 +50,34 @@ const featureList: FeaturesProps[] = [
 
 export const FeaturesSection = () => {
   return (
-    <section id="features" className="container py-24 sm:py-32">
-      <h2 className="text-lg text-primary text-center mb-2 tracking-wider">
-        Features
-      </h2>
+    <section className="container py-24 sm:py-32" id="features">
+      <h2 className="mb-2 text-center text-lg tracking-wider text-primary">Features</h2>
 
-      <h2 className="text-3xl md:text-4xl text-center font-bold mb-4">
-        What Makes Us Different
-      </h2>
+      <h2 className="mb-4 text-center text-3xl font-bold md:text-4xl">What Makes Us Different</h2>
 
-      <h3 className="md:w-1/2 mx-auto text-xl text-center text-muted-foreground mb-8">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatem
-        fugiat, odit similique quasi sint reiciendis quidem iure veritatis optio
-        facere tenetur.
+      <h3 className="mx-auto mb-8 text-center text-xl text-muted-foreground md:w-1/2">
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatem fugiat, odit similique
+        quasi sint reiciendis quidem iure veritatis optio facere tenetur.
       </h3>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {featureList.map(({ icon, title, description }) => (
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {featureList.map(({icon, title, description}) => (
           <div key={title}>
-            <Card className="h-full bg-background border-0 shadow-none">
-              <CardHeader className="flex justify-center items-center">
-                <div className="bg-primary/20 p-2 rounded-full ring-8 ring-primary/10 mb-4">
+            <Card className="h-full border-0 bg-background shadow-none">
+              <CardHeader className="flex items-center justify-center">
+                <div className="mb-4 rounded-full bg-primary/20 p-2 ring-8 ring-primary/10">
                   <Icon
+                    className="text-primary"
+                    color="hsl(var(--primary))"
                     name={icon as keyof typeof icons}
                     size={24}
-                    color="hsl(var(--primary))"
-                    className="text-primary"
                   />
                 </div>
 
                 <CardTitle>{title}</CardTitle>
               </CardHeader>
 
-              <CardContent className="text-muted-foreground text-center">
-                {description}
-              </CardContent>
+              <CardContent className="text-center text-muted-foreground">{description}</CardContent>
             </Card>
           </div>
         ))}

@@ -24,8 +24,7 @@ const FAQList: FAQProps[] = [
     value: "item-2",
   },
   {
-    question:
-      "Lorem ipsum dolor sit amet Consectetur natus dolor minus quibusdam?",
+    question: "Lorem ipsum dolor sit amet Consectetur natus dolor minus quibusdam?",
     answer:
       "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore qui nostrum reiciendis veritatis.",
     value: "item-3",
@@ -36,8 +35,7 @@ const FAQList: FAQProps[] = [
     value: "item-4",
   },
   {
-    question:
-      "Enim ad minim veniam, quis nostrud exercitation ullamco laboris?",
+    question: "Enim ad minim veniam, quis nostrud exercitation ullamco laboris?",
     answer: "consectetur adipisicing elit. Sint labore.",
     value: "item-5",
   },
@@ -45,23 +43,17 @@ const FAQList: FAQProps[] = [
 
 export const FAQSection = () => {
   return (
-    <section id="faq" className="container md:w-[700px] py-24 sm:py-32">
-      <div className="text-center mb-8">
-        <h2 className="text-lg text-primary text-center mb-2 tracking-wider">
-          FAQS
-        </h2>
+    <section className="container py-24 sm:py-32 md:w-[700px]" id="faq">
+      <div className="mb-8 text-center">
+        <h2 className="mb-2 text-center text-lg tracking-wider text-primary">FAQS</h2>
 
-        <h2 className="text-3xl md:text-4xl text-center font-bold">
-          Common Questions
-        </h2>
+        <h2 className="text-center text-3xl font-bold md:text-4xl">Common Questions</h2>
       </div>
 
-      <Accordion type="single" collapsible className="AccordionRoot">
-        {FAQList.map(({ question, answer, value }) => (
+      <Accordion collapsible className="AccordionRoot" type="single">
+        {FAQList.map(({question, answer, value}) => (
           <AccordionItem key={value} value={value}>
-            <AccordionTrigger className="text-left">
-              {question}
-            </AccordionTrigger>
+            <AccordionTrigger className="text-left">{question}</AccordionTrigger>
 
             <AccordionContent>{answer}</AccordionContent>
           </AccordionItem>

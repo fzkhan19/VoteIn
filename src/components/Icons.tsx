@@ -1,4 +1,4 @@
-import {HTMLAttributes} from "react"
+import {HTMLAttributes} from "react";
 
 export const Icons = {
   brain: (props: HTMLAttributes<HTMLOrSVGElement>) => {
@@ -27,6 +27,6 @@ export const Icons = {
           <path d="m151.153 110.293c15.971 0 19.981 7.636 26.058 16.352 5.023 7.215 14.987 9.062 22.273 3.989 7.252-5.049 9.038-15.021 3.989-22.272-.355-.51-.724-1.057-1.113-1.633-6.237-9.229-19.214-28.436-51.207-28.436-8.836 0-16 7.163-16 16s7.163 16 16 16z" />
         </g>
       </svg>
-    )
+    );
   },
-}
+};

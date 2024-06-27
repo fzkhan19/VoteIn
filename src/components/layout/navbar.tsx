@@ -1,17 +1,14 @@
 "use client";
-import {ChevronsDown, Github, Menu, Vote} from "lucide-react";
+import {Home, Menu, Vote} from "lucide-react";
 import Link from "next/link";
 import React from "react";
+
+import {cn} from "@/lib/utils";
+
 import {Button} from "../ui/button";
 import {Separator} from "../ui/separator";
-import {
-  Sheet,
-  SheetContent,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "../ui/sheet";
+import {Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger} from "../ui/sheet";
+
 import {ToggleTheme} from "./toogle-theme";
 
 interface RouteProps {
@@ -50,55 +47,62 @@ const featureList: FeatureProps[] = [
   },
   {
     title: "Build Trust",
-    description:
-      "Leverages social proof elements to establish trust and credibility.",
+    description: "Leverages social proof elements to establish trust and credibility.",
   },
   {
     title: "Capture Leads",
-    description:
-      "Make your lead capture form visually appealing and strategically.",
+    description: "Make your lead capture form visually appealing and strategically.",
   },
 ];
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
+
   return (
-    <header className="shadow-md shadow-primary/20 bg-opacity-15 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl top-5 md:top-10 mx-auto sticky border border-secondary z-40 rounded-2xl flex justify-between items-center p-2 bg-card">
-      <Link href="/" className="font-bold text-lg flex items-center px-2">
-        <Vote className="bg-gradient-to-tr border-secondary from-primary via-primary/80 to-primary rounded-md p-0.5 mr-3 border text-primary-foreground" size={34} />
+    <header
+      className={cn(
+        "sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between",
+        "rounded-2xl border border-secondary p-4",
+        "border-0 shadow-md shadow-primary/20",
+        "md:top-10 md:w-[70%] lg:w-[75%] lg:max-w-screen-xl",
+        "bg-white/20 saturate-150 backdrop-blur backdrop-contrast-125 dark:bg-black/20",
+      )}
+    >
+      <Link className="flex items-center px-2 text-lg font-bold" href="/">
+        <Vote
+          className="mr-3 rounded-md border border-secondary bg-gradient-to-tr from-primary via-primary/80 to-primary p-0.5 text-primary-foreground"
+          size={34}
+        />
         Vote-In
       </Link>
       {/* <!-- Mobile --> */}
       <div className="flex items-center lg:hidden">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
-            <Menu
-              onClick={() => setIsOpen(!isOpen)}
-              className="cursor-pointer lg:hidden"
-            />
+            <Menu className="cursor-pointer lg:hidden" onClick={() => setIsOpen(!isOpen)} />
           </SheetTrigger>
           <SheetContent
+            className="flex flex-col justify-between rounded-br-2xl rounded-tr-2xl border-secondary bg-card"
             side="left"
-            className="flex flex-col justify-between rounded-tr-2xl rounded-br-2xl bg-card border-secondary"
           >
             <div>
               <SheetHeader className="mb-4 ml-4">
                 <SheetTitle className="flex items-center">
-                  <Link href="/" className="flex items-center">
-                    <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" />
+                  <Link className="flex items-center" href="/">
+                    <Vote className="mr-2 h-9 w-9 rounded-lg border border-secondary bg-gradient-to-tr from-primary via-primary/80 to-primary text-primary-foreground" />
                     Vote In
                   </Link>
                 </SheetTitle>
               </SheetHeader>
 
               <div className="flex flex-col gap-2">
-                {routeList.map(({ href, label }) => (
+                {routeList.map(({href, label}) => (
                   <Button
                     key={href}
-                    onClick={() => setIsOpen(false)}
                     asChild
-                    variant="ghost"
                     className="justify-start text-base"
+                    variant="ghost"
+                    onClick={() => setIsOpen(false)}
                   >
                     <Link href={href}>{label}</Link>
                   </Button>
@@ -106,7 +110,7 @@ export const Navbar = () => {
               </div>
             </div>
 
-            <SheetFooter className="flex-col sm:flex-col justify-start items-start">
+            <SheetFooter className="flex-col items-start justify-start sm:flex-col">
               <Separator className="mb-2" />
 
               <ToggleTheme />
@@ -162,18 +166,13 @@ export const Navbar = () => {
         </NavigationMenuList>
       </NavigationMenu> */}
 
-      <div className="hidden lg:flex">
+      <div className="hidden items-center lg:flex">
+        <Link className="mr-3" href={"/"}>
+          <Button className="w-full justify-start" size="sm" variant="ghost">
+            <Home className="size-5" />
+          </Button>
+        </Link>
         <ToggleTheme />
-
-        <Button asChild size="sm" variant="ghost" aria-label="View on GitHub">
-          <Link
-            aria-label="View on GitHub"
-            href="https://github.com/nobruf/shadcn-landing-page.git"
-            target="_blank"
-          >
-            <Github className="size-5" />
-          </Link>
-        </Button>
       </div>
     </header>
   );
