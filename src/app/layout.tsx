@@ -21,11 +21,13 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning lang="en">
-      <body className={cn("min-h-screen bg-background", inter.className)}>
-        <Providers>
-          <Navbar />
-          {children}
-        </Providers>
+      <body className={cn("text-bodyFont bg-background font-sans antialiased", inter.className)}>
+        <main className="grid min-h-screen grid-cols-[minmax(0,1fr)] grid-rows-[auto_1fr_auto] overflow-x-hidden">
+          <Providers>
+            <Navbar />
+            {children}
+          </Providers>
+        </main>
       </body>
     </html>
   );

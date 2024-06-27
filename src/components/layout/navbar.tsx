@@ -7,6 +7,7 @@ import {Button} from "../ui/button";
 import {Separator} from "../ui/separator";
 import {Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger} from "../ui/sheet";
 
+import {cn} from "@/lib/utils";
 import {ToggleTheme} from "./toogle-theme";
 
 interface RouteProps {
@@ -57,7 +58,14 @@ export const Navbar = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <header className="sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between rounded-2xl border border-secondary bg-card bg-opacity-15 p-2 shadow-md shadow-primary/20 md:top-10 md:w-[70%] lg:w-[75%] lg:max-w-screen-xl">
+    <header
+      className={cn(
+        "sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between",
+        "rounded-2xl border border-secondary bg-card bg-opacity-15 p-2",
+        "shadow-md shadow-primary/20",
+        "md:top-10 md:w-[70%] lg:w-[75%] lg:max-w-screen-xl",
+      )}
+    >
       <Link className="flex items-center px-2 text-lg font-bold" href="/">
         <Vote
           className="mr-3 rounded-md border border-secondary bg-gradient-to-tr from-primary via-primary/80 to-primary p-0.5 text-primary-foreground"
