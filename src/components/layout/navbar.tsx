@@ -1,13 +1,14 @@
 "use client";
-import {ChevronsDown, Github, Menu, Vote} from "lucide-react";
+import {Home, Menu, Vote} from "lucide-react";
 import Link from "next/link";
 import React from "react";
+
+import {cn} from "@/lib/utils";
 
 import {Button} from "../ui/button";
 import {Separator} from "../ui/separator";
 import {Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger} from "../ui/sheet";
 
-import {cn} from "@/lib/utils";
 import {ToggleTheme} from "./toogle-theme";
 
 interface RouteProps {
@@ -61,9 +62,10 @@ export const Navbar = () => {
     <header
       className={cn(
         "sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between",
-        "rounded-2xl border border-secondary bg-card bg-opacity-15 p-2",
-        "shadow-md shadow-primary/20",
+        "rounded-2xl border border-secondary p-4",
+        "border-0 shadow-md shadow-primary/20",
         "md:top-10 md:w-[70%] lg:w-[75%] lg:max-w-screen-xl",
+        "bg-white/20 saturate-150 backdrop-blur backdrop-contrast-125 dark:bg-black/20",
       )}
     >
       <Link className="flex items-center px-2 text-lg font-bold" href="/">
@@ -87,7 +89,7 @@ export const Navbar = () => {
               <SheetHeader className="mb-4 ml-4">
                 <SheetTitle className="flex items-center">
                   <Link className="flex items-center" href="/">
-                    <ChevronsDown className="mr-2 h-9 w-9 rounded-lg border border-secondary bg-gradient-to-tr from-primary via-primary/70 to-primary text-white" />
+                    <Vote className="mr-2 h-9 w-9 rounded-lg border border-secondary bg-gradient-to-tr from-primary via-primary/80 to-primary text-primary-foreground" />
                     Vote In
                   </Link>
                 </SheetTitle>
@@ -164,18 +166,13 @@ export const Navbar = () => {
         </NavigationMenuList>
       </NavigationMenu> */}
 
-      <div className="hidden lg:flex">
+      <div className="hidden items-center lg:flex">
+        <Link className="mr-3" href={"/"}>
+          <Button className="w-full justify-start" size="sm" variant="ghost">
+            <Home className="size-5" />
+          </Button>
+        </Link>
         <ToggleTheme />
-
-        <Button asChild aria-label="View on GitHub" size="sm" variant="ghost">
-          <Link
-            aria-label="View on GitHub"
-            href="https://github.com/nobruf/shadcn-landing-page.git"
-            target="_blank"
-          >
-            <Github className="size-5" />
-          </Link>
-        </Button>
       </div>
     </header>
   );

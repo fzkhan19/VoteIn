@@ -1,6 +1,5 @@
-// /anything
-
 import {redis} from "@/lib/redis";
+
 import ClientPage from "./ClientPage";
 
 interface PageProps {

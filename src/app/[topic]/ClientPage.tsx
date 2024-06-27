@@ -1,15 +1,19 @@
 "use client";
 
-import {Icons} from "@/components/Icons";
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
-import {cn} from "@/lib/utils";
 import {useMutation} from "@tanstack/react-query";
 import {scaleLog} from "@visx/scale";
 import {Text} from "@visx/text";
 import {Wordcloud} from "@visx/wordcloud";
+import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
+
+import {Icons} from "@/components/Icons";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import Particles from "@/components/ui/particles";
+import {cn} from "@/lib/utils";
+
 import {socket} from "../../socket";
 import {submitComment} from "../actions";
 
@@ -18,11 +22,17 @@ interface ClientPageProps {
   initialData: {text: string; value: number}[];
 }
 
-const COLORS = ["#FFDD00", "#66AA00", "#FF8800", "#AADD00", "#FF5900"];
+const COLORS = ["#d451b5", "#df7f85", "#e7a65a", "#d0d02a", "#fdf808"];
 
 const ClientPage = ({topicName, initialData}: ClientPageProps) => {
   const [words, setWords] = useState(initialData);
   const [input, setInput] = useState<string>("");
+  const {theme} = useTheme();
+  const [color, setColor] = useState("#ffffff");
+
+  useEffect(() => {
+    setColor(theme === "dark" ? "#ffffff" : "#000000");
+  }, [theme]);
 
   useEffect(() => {
     socket.emit("join-room", `room:${topicName}`);
@@ -58,7 +68,12 @@ const ClientPage = ({topicName, initialData}: ClientPageProps) => {
     };
   }, [words]);
 
-  const fontScale = scaleLog({
+  const fontScaleMd = scaleLog({
+    domain: [Math.min(...words.map((w) => w.value)), Math.max(...words.map((w) => w.value))],
+    range: [20, 100],
+  });
+
+  const fontScaleSm = scaleLog({
     domain: [Math.min(...words.map((w) => w.value)), Math.max(...words.map((w) => w.value))],
     range: [20, 90],
   });
@@ -101,27 +116,55 @@ const ClientPage = ({topicName, initialData}: ClientPageProps) => {
         <p className="mt-1 text-xs opacity-60">*updated in real-time</p>
       </div>
 
-      <div className="flex aspect-square items-center justify-center md:max-w-xl">
+      <div className="hidden aspect-square items-center justify-center md:flex md:max-w-xl">
         <Wordcloud
-          words={words}
-          width={400}
-          height={400}
-          fontSize={(data) => fontScale(data.value)}
           font={"Impact"}
+          fontSize={(data) => fontScaleMd(data.value)}
+          height={400}
           padding={2}
-          spiral="archimedean"
-          rotate={0}
           random={() => 0.5}
+          rotate={0}
+          spiral="archimedean"
+          width={400}
+          words={words}
         >
           {(cloudWords) =>
             cloudWords.map((w, i) => (
               <Text
                 key={w.text}
                 fill={COLORS[i % COLORS.length]}
+                fontFamily={w.font}
+                fontSize={w.size}
                 textAnchor="middle"
                 transform={`translate(${w.x}, ${w.y})`}
-                fontSize={w.size}
+              >
+                {w.text}
+              </Text>
+            ))
+          }
+        </Wordcloud>
+      </div>
+      <div className="flex aspect-square items-center justify-center md:hidden md:max-w-xl">
+        <Wordcloud
+          font={"Impact"}
+          fontSize={(data) => fontScaleSm(data.value)}
+          height={300}
+          padding={2}
+          random={() => 0.5}
+          rotate={0}
+          spiral="archimedean"
+          width={300}
+          words={words}
+        >
+          {(cloudWords) =>
+            cloudWords.map((w, i) => (
+              <Text
+                key={w.text}
+                fill={COLORS[i % COLORS.length]}
                 fontFamily={w.font}
+                fontSize={w.size}
+                textAnchor="middle"
+                transform={`translate(${w.x}, ${w.y})`}
               >
                 {w.text}
               </Text>
@@ -137,21 +180,21 @@ const ClientPage = ({topicName, initialData}: ClientPageProps) => {
         )}
       >
         <Label className="pb-2 text-base font-semibold tracking-tight">
-          Here's what I think about {topicName}
+          Here&apos;s what I think about {topicName}
         </Label>
         <div className="mt-1 w-full gap-2">
           <form
+            className="flex w-full items-center gap-4"
             onSubmit={(e) => {
               e.preventDefault();
               setInput("");
               mutate({comment: input, topicName});
             }}
-            className="flex w-full items-center gap-4"
           >
             <Input
+              placeholder={`${topicName} is absolutely...`}
               value={input}
               onChange={({target}) => setInput(target.value)}
-              placeholder={`${topicName} is absolutely...`}
             />
             <Button disabled={isPending} type="submit">
               Share
@@ -159,6 +202,13 @@ const ClientPage = ({topicName, initialData}: ClientPageProps) => {
           </form>
         </div>
       </div>
+      <Particles
+        refresh
+        className="absolute inset-0 -z-10"
+        color={color}
+        ease={80}
+        quantity={100}
+      />
     </div>
   );
 };

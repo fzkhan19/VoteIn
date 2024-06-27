@@ -53,3 +53,9 @@ export const submitComment = async ({comment, topicName}: {comment: string; topi
 
   return comment;
 };
+
+export const getTopics = async () => {
+  const topics = await redis.smembers("existing-topics");
+
+  return topics;
+};
