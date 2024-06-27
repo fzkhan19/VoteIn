@@ -6,11 +6,7 @@ module.exports = {
   safelist: ["dark"],
   prefix: "",
 
-  content: [
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-  ],
+  content: ["./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
 
   theme: {
     container: {
@@ -64,20 +60,20 @@ module.exports = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: 0 },
-          to: { height: "var(--radix-accordion-content-height)" },
+          from: {height: 0},
+          to: {height: "var(--radix-accordion-content-height)"},
         },
         "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
+          from: {height: "var(--radix-accordion-content-height)"},
+          to: {height: 0},
         },
         "collapsible-down": {
-          from: { height: 0 },
-          to: { height: "var(--radix-collapsible-content-height)" },
+          from: {height: 0},
+          to: {height: "var(--radix-collapsible-content-height)"},
         },
         "collapsible-up": {
-          from: { height: "var(--radix-collapsible-content-height)" },
-          to: { height: 0 },
+          from: {height: "var(--radix-collapsible-content-height)"},
+          to: {height: 0},
         },
       },
       animation: {
