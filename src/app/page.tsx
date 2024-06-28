@@ -2,6 +2,7 @@
 import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
 
+import socketClient from "@/components/indicator";
 import CurrentTopics from "@/components/layout/sections/CurrentTopics";
 import {HeroSection} from "@/components/layout/sections/hero";
 import Particles from "@/components/ui/particles";
@@ -13,6 +14,8 @@ export default function Home() {
   useEffect(() => {
     setColor(theme === "dark" ? "#ffffff" : "#000000");
   }, [theme]);
+
+  socketClient();
 
   return (
     <div className="flex flex-col items-center justify-center py-8">

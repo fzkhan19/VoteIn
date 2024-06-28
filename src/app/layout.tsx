@@ -3,6 +3,7 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 
 import Providers from "@/components/Providers";
+import {SocketProvider} from "@/components/SocketProvider";
 import {Navbar} from "@/components/layout/navbar";
 import {cn} from "@/lib/utils";
 import "./globals.css";
@@ -24,8 +25,10 @@ export default function RootLayout({
       <body className={cn("text-bodyFont bg-background font-sans antialiased", inter.className)}>
         <main className="">
           <Providers>
-            <Navbar />
-            {children}
+            <SocketProvider>
+              <Navbar />
+              {children}
+            </SocketProvider>
           </Providers>
         </main>
       </body>
