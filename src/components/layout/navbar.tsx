@@ -5,6 +5,7 @@ import React from "react";
 
 import {cn} from "@/lib/utils";
 
+import Indicator from "../indicator";
 import {Button} from "../ui/button";
 import {Separator} from "../ui/separator";
 import {Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger} from "../ui/sheet";
@@ -167,6 +168,7 @@ export const Navbar = () => {
       </NavigationMenu> */}
 
       <div className="hidden items-center lg:flex">
+        <Indicator />
         <Link className="mr-3" href={"/"}>
           <Button className="w-full justify-start" size="sm" variant="ghost">
             <Home className="size-5" />

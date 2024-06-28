@@ -25,7 +25,7 @@ const TopicCreator = () => {
       <div className="mt-12 flex flex-col gap-2 md:w-2/3">
         <form className="flex gap-2" onSubmit={handleSubmit}>
           <Input
-            className="min-w-64 bg-white"
+            className="min-w-64 border-primary/40 "
             placeholder="Enter topic here..."
             value={input}
             onChange={({target}) => setInput(target.value)}
