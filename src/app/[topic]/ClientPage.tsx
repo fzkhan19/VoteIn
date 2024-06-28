@@ -8,13 +8,13 @@ import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
 
 import {Icons} from "@/components/Icons";
+import {useSocket} from "@/components/SocketProvider";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import Particles from "@/components/ui/particles";
 import {cn} from "@/lib/utils";
 
-import {socket} from "../../socket";
 import {submitComment} from "../actions";
 
 interface ClientPageProps {
@@ -29,53 +29,58 @@ const ClientPage = ({topicName, initialData}: ClientPageProps) => {
   const [input, setInput] = useState<string>("");
   const {theme} = useTheme();
   const [color, setColor] = useState("#ffffff");
+  const {isConnected, socket} = useSocket();
 
   useEffect(() => {
     setColor(theme === "dark" ? "#ffffff" : "#000000");
   }, [theme]);
 
   useEffect(() => {
-    socket.emit("join-room", `room:${topicName}`);
+    isConnected && socket.emit("join-room", `room:${topicName}`);
   }, []);
 
   useEffect(() => {
-    socket.on("room-update", (message: string) => {
-      const data = JSON.parse(message) as {
-        text: string;
-        value: number;
-      }[];
+    if (isConnected) {
+      socket.on("room-update", (message: string) => {
+        const data = JSON.parse(message) as {
+          text: string;
+          value: number;
+        }[];
 
-      data.map((newWord) => {
-        const isWordAlreadyIncluded = words.some((word) => word.text === newWord.text);
+        data.map((newWord) => {
+          const isWordAlreadyIncluded = words.some((word) => word.text === newWord.text);
 
-        if (isWordAlreadyIncluded) {
-          // increment
-          setWords((prev) => {
-            const before = prev.find((word) => word.text === newWord.text);
-            const rest = prev.filter((word) => word.text !== newWord.text);
+          if (isWordAlreadyIncluded) {
+            // increment
+            setWords((prev) => {
+              const before = prev.find((word) => word.text === newWord.text);
+              const rest = prev.filter((word) => word.text !== newWord.text);
 
-            return [...rest, {text: before!.text, value: before!.value + newWord.value}];
-          });
-        } else if (words.length < 50) {
-          // add to state
-          setWords((prev) => [...prev, newWord]);
-        }
+              return [...rest, {text: before!.text, value: before!.value + newWord.value}];
+            });
+          } else if (words.length < 50) {
+            // add to state
+            setWords((prev) => [...prev, newWord]);
+          }
+        });
       });
-    });
+    }
 
     return () => {
-      socket.off("room-update");
+      isConnected && socket.off("room-update");
     };
   }, [words]);
 
   const fontScaleMd = scaleLog({
     domain: [Math.min(...words.map((w) => w.value)), Math.max(...words.map((w) => w.value))],
-    range: [20, 100],
+    range: [10, 100],
   });
+
+  console.log(fontScaleMd(100));
 
   const fontScaleSm = scaleLog({
     domain: [Math.min(...words.map((w) => w.value)), Math.max(...words.map((w) => w.value))],
-    range: [20, 90],
+    range: [10, 90],
   });
 
   const {mutate, isPending} = useMutation({
@@ -116,7 +121,7 @@ const ClientPage = ({topicName, initialData}: ClientPageProps) => {
         <p className="mt-1 text-xs opacity-60">*updated in real-time</p>
       </div>
 
-      <div className="hidden aspect-square items-center justify-center md:flex md:max-w-xl">
+      <div className="hidden w-full items-center justify-center md:flex md:max-w-xl">
         <Wordcloud
           font={"Impact"}
           fontSize={(data) => fontScaleMd(data.value)}
@@ -125,7 +130,7 @@ const ClientPage = ({topicName, initialData}: ClientPageProps) => {
           random={() => 0.5}
           rotate={0}
           spiral="archimedean"
-          width={400}
+          width={600}
           words={words}
         >
           {(cloudWords) =>
