@@ -64,7 +64,8 @@ export const Navbar = () => {
       className={cn(
         "sticky top-5 z-40 mx-auto flex w-[90%] items-center justify-between",
         "rounded-2xl border border-secondary p-4",
-        "border-0 shadow-md shadow-primary/20",
+        "shadow-[0_0px_10px_rgb(0,0,0,0.2)] shadow-primary/30",
+        "border-0",
         "md:top-10 md:w-[70%] lg:w-[75%] lg:max-w-screen-xl",
         "bg-white/20 saturate-150 backdrop-blur backdrop-contrast-125 dark:bg-black/20",
       )}
@@ -169,7 +170,7 @@ export const Navbar = () => {
 
       <div className="hidden items-center lg:flex">
         <Indicator />
-        <Link className="mr-3" href={"/"}>
+        <Link className="mx-3" href={"/"}>
           <Button className="w-full justify-start" size="sm" variant="ghost">
             <Home className="size-5" />
           </Button>

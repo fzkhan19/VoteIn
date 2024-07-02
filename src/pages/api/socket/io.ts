@@ -34,11 +34,6 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
     io.on("connection", async (socket) => {
       const {id} = socket;
 
-      console.log(
-        ":::::::::::::::::::::::::::::::::::::::::::::SOCKET CONNECTED:::::::::::::::::::::::::::::::::::::::::::::",
-      );
-      console.log("Socket connected:", id);
-
       socket.on("join-room", async (room: string) => {
         console.log("User joined room:", room);
 

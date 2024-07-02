@@ -76,8 +76,6 @@ const ClientPage = ({topicName, initialData}: ClientPageProps) => {
     range: [10, 100],
   });
 
-  console.log(fontScaleMd(100));
-
   const fontScaleSm = scaleLog({
     domain: [Math.min(...words.map((w) => w.value)), Math.max(...words.map((w) => w.value))],
     range: [10, 90],

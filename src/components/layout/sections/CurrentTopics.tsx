@@ -40,8 +40,9 @@ export default function CurrentTopics() {
   return !loading ? (
     <Card
       className={cn(
-        "m-2 flex w-4/5 flex-col items-center justify-center",
-        "border-0 border-t border-primary/20 shadow-xl shadow-primary/10",
+        "m-2 flex w-[95%] flex-col items-center justify-center md:w-[90%]",
+        "shadow-[0_0px_10px_rgb(0,0,0,0.2)] shadow-primary/30",
+        "border-0",
         "bg-transparent backdrop-blur-[2px]",
       )}
     >
