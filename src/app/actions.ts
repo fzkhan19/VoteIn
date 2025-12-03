@@ -63,7 +63,7 @@ export const submitComment = async ({comment, topicName}: {comment: string; topi
     });
   }
 
-  const baseUrl = process.env.VERCEL_URL;
+  const baseUrl = process.env.SITE_URL;
 
   await fetch(`${baseUrl}/api/pusher/trigger`, {
     method: "POST",
