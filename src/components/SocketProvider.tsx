@@ -1,42 +1,67 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import PusherClient from "pusher-js";
 import {createContext, useContext, useEffect, useState} from "react";
-import {io as ClientIO} from "socket.io-client";
-type SocketContextType = {
-  socket: any | null;
+type PusherContextType = {
+  pusher: PusherClient | null;
   isConnected: boolean;
+  subscribe: (channelName: string, eventName: string, callback: (data: any) => void) => void;
+  unsubscribe: (channelName: string) => void;
 };
 
-const SocketContext = createContext<SocketContextType>({socket: null, isConnected: false});
+const PusherContext = createContext<PusherContextType>({
+  pusher: null,
+  isConnected: false,
+  subscribe: () => {},
+  unsubscribe: () => {},
+});
 
-export const useSocket = () => {
-  return useContext(SocketContext);
+export const usePusher = () => {
+  return useContext(PusherContext);
 };
 
 export const SocketProvider = ({children}: {children: React.ReactNode}) => {
-  const [socket, setSocket] = useState<any | null>(null);
+  const [pusher, setPusher] = useState<PusherClient | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socketInstance = new (ClientIO as any)(process.env.NEXT_PUBLIC_SITE_URL!, {
-      path: "/api/socket/io",
-      addTrailingSlash: false,
+    const pusherInstance = new PusherClient(process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+      // Add any other Pusher options here, e.g., authEndpoint for private channels
     });
 
-    socketInstance.on("connect", () => {
+    pusherInstance.connection.bind("connected", () => {
       setIsConnected(true);
     });
 
-    socketInstance.on("disconnect", () => {
+    pusherInstance.connection.bind("disconnected", () => {
       setIsConnected(false);
     });
 
-    setSocket(socketInstance);
+    setPusher(pusherInstance);
 
     return () => {
-      socketInstance.disconnect();
+      pusherInstance.disconnect();
     };
   }, []);
 
-  return <SocketContext.Provider value={{socket, isConnected}}>{children}</SocketContext.Provider>;
+  const subscribe = (channelName: string, eventName: string, callback: (data: any) => void) => {
+    if (pusher) {
+      const channel = pusher.subscribe(channelName);
+
+      channel.bind(eventName, callback);
+    }
+  };
+
+  const unsubscribe = (channelName: string) => {
+    if (pusher) {
+      pusher.unsubscribe(channelName);
+    }
+  };
+
+  return (
+    <PusherContext.Provider value={{pusher, isConnected, subscribe, unsubscribe}}>
+      {children}
+    </PusherContext.Provider>
+  );
 };

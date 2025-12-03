@@ -5,4 +5,8 @@ const nextConfig = {
   },
 };
 
+export const config = {
+  runtime: "edge", // or 'nodejs'
+}
+
 export default nextConfig;

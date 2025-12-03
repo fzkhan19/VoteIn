@@ -8,7 +8,7 @@ import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
 
 import {Icons} from "@/components/Icons";
-import {useSocket} from "@/components/SocketProvider";
+import {usePusher} from "@/components/SocketProvider";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
@@ -28,56 +28,43 @@ const ClientPage = ({topicName, initialData}: ClientPageProps) => {
   const [words, setWords] = useState(initialData);
   const [input, setInput] = useState<string>("");
   const {theme} = useTheme();
-  const [color, setColor] = useState("#ffffff");
-  const {isConnected, socket} = useSocket();
+  const [color, setColor] = useState(theme === "dark" ? "#ffffff" : "#000000");
+  const {isConnected, subscribe, unsubscribe} = usePusher();
 
   useEffect(() => {
     setColor(theme === "dark" ? "#ffffff" : "#000000");
   }, [theme]);
 
   useEffect(() => {
-    isConnected && socket.emit("join-room", `room:${topicName}`);
-  }, []);
-
-  useEffect(() => {
     if (isConnected) {
-      socket.on("room-update", (message: string) => {
-        const data = JSON.parse(message) as {
-          text: string;
-          value: number;
-        }[];
+      const channelName = `room-${topicName}`;
+      const eventName = "room-update";
 
-        data.map((newWord) => {
-          const isWordAlreadyIncluded = words.some((word) => word.text === newWord.text);
+      const handleRoomUpdate = (message: {text: string; value: number}[]) => {
+        setWords(message);
+      };
 
-          if (isWordAlreadyIncluded) {
-            // increment
-            setWords((prev) => {
-              const before = prev.find((word) => word.text === newWord.text);
-              const rest = prev.filter((word) => word.text !== newWord.text);
+      subscribe(channelName, eventName, handleRoomUpdate);
 
-              return [...rest, {text: before!.text, value: before!.value + newWord.value}];
-            });
-          } else if (words.length < 50) {
-            // add to state
-            setWords((prev) => [...prev, newWord]);
-          }
-        });
-      });
+      return () => {
+        unsubscribe(channelName);
+      };
     }
-
-    return () => {
-      isConnected && socket.off("room-update");
-    };
-  }, [words]);
+  }, [isConnected, topicName, subscribe, unsubscribe]);
 
   const fontScaleMd = scaleLog({
-    domain: [Math.min(...words.map((w) => w.value)), Math.max(...words.map((w) => w.value))],
+    domain: [
+      Math.min(...words.map((w) => w.value || 1)),
+      Math.max(...words.map((w) => w.value || 1)),
+    ],
     range: [10, 100],
   });
 
   const fontScaleSm = scaleLog({
-    domain: [Math.min(...words.map((w) => w.value)), Math.max(...words.map((w) => w.value))],
+    domain: [
+      Math.min(...words.map((w) => w.value || 1)),
+      Math.max(...words.map((w) => w.value || 1)),
+    ],
     range: [10, 90],
   });
 
@@ -121,6 +108,7 @@ const ClientPage = ({topicName, initialData}: ClientPageProps) => {
 
       <div className="hidden w-full items-center justify-center md:flex md:max-w-xl">
         <Wordcloud
+          key={words.length}
           font={"Impact"}
           fontSize={(data) => fontScaleMd(data.value)}
           height={400}
@@ -149,6 +137,7 @@ const ClientPage = ({topicName, initialData}: ClientPageProps) => {
       </div>
       <div className="flex aspect-square items-center justify-center md:hidden md:max-w-xl">
         <Wordcloud
+          key={words.length}
           font={"Impact"}
           fontSize={(data) => fontScaleSm(data.value)}
           height={300}

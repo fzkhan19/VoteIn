@@ -49,7 +49,33 @@ export const submitComment = async ({comment, topicName}: {comment: string; topi
 
   await redis.incr("served-requests");
 
-  await redis.publish(`room:${topicName}`, words);
+  // Fetch the updated word cloud from Redis
+  const updatedWords: Array<string | number> = await redis.zrange(`room:${topicName}`, 0, -1, {
+    withScores: true,
+  });
+
+  const formattedWords = [];
+
+  for (let i = 0; i < updatedWords.length; i += 2) {
+    formattedWords.push({
+      text: updatedWords[i] as string,
+      value: updatedWords[i + 1] as number,
+    });
+  }
+
+  const baseUrl = process.env.VERCEL_URL;
+
+  await fetch(`${baseUrl}/api/pusher/trigger`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      channel: `room-${topicName}`,
+      event: "room-update",
+      data: formattedWords,
+    }),
+  });
 
   return comment;
 };

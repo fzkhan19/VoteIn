@@ -1,14 +1,13 @@
 "use client";
 import {Circle} from "lucide-react";
 
-import {useSocket} from "./SocketProvider";
+import {usePusher} from "./SocketProvider";
 import {Badge} from "./ui/badge";
 import {Label} from "./ui/label";
 export default function Indicator() {
-  const {isConnected, socket} = useSocket();
+  const {isConnected, pusher} = usePusher();
 
   if (!isConnected) {
-    socket?.connect();
 
     return (
       <Badge className="flex items-center gap-2 border-none py-1" variant={"loading"}>
